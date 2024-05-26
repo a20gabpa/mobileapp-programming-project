@@ -155,6 +155,100 @@ Länk till commit där denna funktionalitet implementeras: https://github.com/a2
 *Figur 1: Startskärm / Huvudskärm*
 ![Screenshot_20240526_194008](https://github.com/a20gabpa/mobileapp-programming-project/assets/102604680/fd7a599d-c5f2-4e9d-8652-7fb20e0d61ec)
 
+En annan implementeringsdetalj är "About Me"/"About Us". I uppgiften skulle även det finns en skärm vilket visade information om den tänkta målgruppen och detta skulle ske via en separat aktivitet. Det första steget var att lägga till en knapp på startskärmen för att kunna starta den nya aktivitet genom input från användaren (Kodsnutt 6). Knappen går även att se längst upp i Figur 1. Därefter behöves även _AndroidManifest.xml_ uppdateras för att inkludera den andra aktiviteten och samtidigt uppdaterades rättigheterna för internet ifall det skulle behövas för att felsöka (Kodsnutt 7). 
+
+Länk till commit för implementering av sekundär aktivitet: https://github.com/a20gabpa/mobileapp-programming-project/commit/db5788b9d42498a2c36b0471470b869ae9a6187f
+
+*Kodsnutt 6: activity_main.xml*
+```
+    ...
+     <Button
+        android:id="@+id/aboutMeBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="160dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="160dp"
+        android:layout_marginBottom="611dp"
+        android:text="About Us"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appBarLayout" />
+    ...
+```
+
+*Kodsnutt 7: AndroidManifest.xml*
+```
+    ...
+    <uses-permission android:name="android.permission.INTERNET" />
+    <activity android:name=".AboutActivity"></activity>
+    ...
+```
+
+Efter att _AndroidManifest_ har uppdaterats, implementerades en nya java-klass som representerar den andra aktiviteten. I detta ifall finns det en variabel för _WebView_ som används för att visa den interna HTML-sidan (Kodsnutt 8 & 10). Slutligen för att faktsikt kunna starta den andra aktivitet behövde koden i _MainActivity.java_ uppdateras genom att en _onClickListener_ lades till på knappen. Denna _onClickListener_ ser till att när användaren väl trycker på knappen, startas en ny aktivitet. 
+
+*Kodsnutt 8: AboutActivity.java*
+```
+    public class AboutActivity extends AppCompatActivity {
+    
+        /* ================== VARIABLES ================== */
+        private WebView aboutView;
+        /* =============================================== */
+    
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_about);
+    
+            // Get ref to WebView and add webclient
+            aboutView = findViewById(R.id.webView);
+            aboutView.setWebViewClient(new WebViewClient());
+            aboutView.getSettings().setJavaScriptEnabled(true);
+    
+            aboutView.loadUrl("file:///android_asset/index.html");
+        }
+    }
+```
+
+*Kodsnutt 9: MainActivity.java*
+```
+    ...
+     /* ================== VARIABLES ================== */
+        private Button aboutBtn;
+    /* =============================================== */
+
+    // Get reference to about button and add event listener
+    aboutBtn = findViewById(R.id.aboutMeBtn);
+    aboutBtn.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Intent intent = new Intent(MainActivity.this, AboutActivity.class);
+            startActivity(intent);
+        }
+    });
+    ...
+```
+
+*Kodsnutt 10: activity_about.xml*
+```
+    ...
+     <WebView
+        android:id="@+id/webView"
+        android:layout_width="409dp"
+        android:layout_height="729dp"
+        android:layout_marginStart="1dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="1dp"
+        android:layout_marginBottom="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    ...
+```
+
+Hur den interna HTML-sidan ser ut i applikationen går att se i Figur 2. 
+*Figur 2: About*
 ![Screenshot_20240526_194016](https://github.com/a20gabpa/mobileapp-programming-project/assets/102604680/97a032a3-5dde-41e9-9f9b-38a38feac6be)
 
 Slutligen, tanken var att implementera filter-funktionalitet för att kunna uppfylla kraven för VG men detta implementerades aldrig i slutändan vilket ledde till att det finns fortfarande knappar och textfält för detta men gör inget just nu. 
