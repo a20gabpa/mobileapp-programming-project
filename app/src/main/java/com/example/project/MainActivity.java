@@ -2,16 +2,20 @@ package com.example.project;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements JsonTask.JsonTaskListener{
 
     /* ================== VARIABLES ================== */
+    private final String JSON_URL = "https://mobprog.webug.se/json-api?login=a20gabpa";
+
     private Button aboutBtn;
+
     /* =============================================== */
 
     @Override
@@ -31,6 +35,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        new JsonTask(this).execute(JSON_URL);
+    }
 
+    @Override
+    public void onPostExecute(String json) {
+        Log.d("", json);
     }
 }
